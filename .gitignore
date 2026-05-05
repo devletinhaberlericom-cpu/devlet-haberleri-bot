@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.env
+.env.local
+.env.*.local
+data/images/
+data/videos/
+data/temp/
+*.log
+.DS_Store
+.vscode/
+.idea/
+*.swp
