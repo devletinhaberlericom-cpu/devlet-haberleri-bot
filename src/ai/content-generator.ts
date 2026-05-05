@@ -67,7 +67,7 @@ export async function generateWpDraft(
   return askAiJson<WpDraft>({
     system: SYSTEM_PROMPT(config.SITE_BRAND_NAME, config.SITE_DOMAIN),
     user: userPrompt(article, sourceName),
-    model: 'gemini-2.5-flash', // Daha kaliteli model burada (250 RPD limit, günde 2-3 yayın yapacağız)
+    model: 'gemini-2.5-flash-lite', // Aynı limit havuzunu paylaşıyor, lite kullanıyoruz
     maxTokens: 3500,
   });
 }
