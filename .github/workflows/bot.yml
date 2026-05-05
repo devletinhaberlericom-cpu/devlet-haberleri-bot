@@ -1,0 +1,45 @@
+name: Devlet Haberleri Bot
+
+on:
+  schedule:
+    - cron: '30 6 * * *'
+    - cron: '30 14 * * *'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --omit=dev || npm install
+
+      - name: Install tsx
+        run: npm install -g tsx
+
+      - name: Run job
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          WORDPRESS_URL: ${{ secrets.WORDPRESS_URL }}
+          WORDPRESS_USERNAME: ${{ secrets.WORDPRESS_USERNAME }}
+          WORDPRESS_APP_PASSWORD: ${{ secrets.WORDPRESS_APP_PASSWORD }}
+          SITE_DOMAIN: ${{ vars.SITE_DOMAIN || 'devletinhaberleri.com' }}
+          SITE_BRAND_NAME: ${{ vars.SITE_BRAND_NAME || 'Devlet Haberleri' }}
+          POSTS_PER_RUN: ${{ vars.POSTS_PER_RUN || '1' }}
+          NODE_ENV: production
+          TZ: Europe/Istanbul
+        run: tsx src/index.ts --job
